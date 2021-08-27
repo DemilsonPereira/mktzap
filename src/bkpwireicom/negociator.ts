@@ -53,8 +53,6 @@ async function customerHistory(req: Request, res: Response) {
     // console.log(contactMessage);
     const mensagens = await messageHistory()
 
-    let { id, name, created_at, contact_id, channelable_type, protocol } = contactMessage
-
     let dados = contactMessage.map((item: { id: any; name: any; created_at: any; contact_id: any; channelable_type: any; protocol: any; }) => {
         return {
             id: item.id,
