@@ -5,51 +5,60 @@ import {
 } from 'express';
 
 import fs from 'fs';
+
+
 class HistoryMensages {
-    public response = []
 
     async serviceHistory(req: Request, res: Response) {
-        const file = __dirname + '/serviceHistory.json';
-        const ids = [];
-        for (var page = 1; page <= 1; page++) { //469
-            const response = await axios.get(
-                `${process.env.BKP_URL}/${process.env.COMPANY_ID}/history`, {
+        const pageTotal = 2;
+
+        var INITIAL_DATA = [];
+        for (var page = 1; page <= pageTotal; page++) {
+            var response = await axios.get(`${process.env.BKP_URL}/${process.env.COMPANY_ID}/history`, {
                 headers: {
                     Authorization: `Bearer ${process.env.TOKEN}`,
                     'x-page': page
                 }
             })
-            const data = await response.data;
 
-            // Salvar arquivo em JSON sem sobrescrever
-            // fs.appendFile(file, JSON.stringify(data), err => {
-            //     console.log(err || 'Arquivo salvo');
-            // });
-            // console.log(data)
+            var arrayCurrently = response.data;
+            // var newArray = arrayCurrently.replace(/[\[\]']+/,'');
 
-            ids.push(data)
-            // console.log(ids.push(data))
-            // console.log(data.length);
+            INITIAL_DATA.push(arrayCurrently);
+
+            console.log(`page ${page} of ${pageTotal}`);
+
+            fs.appendFile(__dirname + `/dataAtendimento/page_${page}.json`, JSON.stringify(arrayCurrently), (err) => {
+                if (err) throw err;
+                console.log('successfully generated file!');
+            });
         }
-
-        return res.json(ids)
-        // return ids.flat(Infinity)
     }
 
     async messageHistory(req: Request, res: Response) {
-        let contactMessage = require('./serviceHistory.json');
-        let { id } = contactMessage[0]
-        const response = await axios.get(
-            `${process.env.BKP_URL}/${process.env.COMPANY_ID}/history/${id}/message`, {
-            headers: {
-                Authorization: `Bearer ${process.env.TOKEN}`,
-                'x-page': '1'
-            }
-        })
+        const pageTotal = 2;
 
-        const data = await response.data;
+        var INITIAL_DATA = [];
+        for (var page = 1; page <= pageTotal; page++) {
+            const response = await axios.get(
+                `${process.env.BKP_URL}/${process.env.COMPANY_ID}/message`, {
+                headers: {
+                    Authorization: `Bearer ${process.env.TOKEN}`,
+                    'x-page': '1'
+                }
+            })
 
-        return res.json(data);
+            var arrayCurrently = await response.data;
+
+            INITIAL_DATA.push(arrayCurrently);
+
+            console.log(`page ${page} of ${pageTotal}`);
+
+            fs.appendFile(__dirname + `/dataMessages/page_${page}.json`, JSON.stringify(arrayCurrently), (err) => {
+                if (err) throw err;
+                console.log('successfully generated file!');
+            });
+        }
     }
 }
 

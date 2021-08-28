@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 70px;
+    }
+    .title {
+      color: rgb(20, 154, 248);
+      font-size: 12px;
+      margin: 4px 7px;
+    }
+    ul {
+      margin: 2px 7px;
+      padding: 0;      
+    }
+    ul > li {      
+      font-size: 8px;
+      margin: 15px 0;      
+      padding: 0;
+    }
+    p {
+      font-size: 7px;
+    }
+    .header {
+      margin: 7px;
+    }
+    .client {
+      color: #313233;
+    }
+    .operador {
+      color: #313233;
+    }
+    .message_text {
+      font-size: 10px;
+      width: 100px;
+    }
+    .description {
+      font-size: 6px;
+    }
+  </style>
+</head>
+<body style="font-family: Helvetica, sans-serif; width: 100%">
+  <strong class="title">Relatório da Conversa</strong><br/>
+
+  <div class="header">
+    <p>Id_Atendimento: <%= id %></p>
+    <p>Nome: <%= name %></p>
+    <p>Protocolo de Atendimento: <%= protocol %></p>
+    <p>Data de criação: <%= created_at %></p>
+    <p>Telefone: <%= contact_id %></p>
+    <p>Canal de Atendimento: <%= channelable_type %></p>
+  </div>
+
+  <ul>
+    <% messagesExchanged.forEach(function(item) { %>
+      <li> 
+        <% if (item.sent_by_operator === 0) { %>
+          <strong class="cliente">Cliente</strong> <br/>
+        <% } %>
+
+        <% if (item.sent_by_operator === 1) { %>
+          <strong class="operador">Operador</strong> <br/>
+        <% } %>
+        
+        <p class="description">Mensagem enviada: <%= item.created_at %></p>
+        <p class="mensage_text">Mensagem: <%= item.message %></p>
+      </li>
+    <% }); %> 
+   </ul>
+
+  </ul>
+</body>
+</html>
